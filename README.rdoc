@@ -1,9 +1,29 @@
 = sinatra_omniauth
 
-Description goes here.
+A Sinatra extension that provides pure OmniAuth authentication to your application (with DataMapper)
+
+== Description
+
+Read Markus Proske's full article "Omniauth pure: Authentication with Facebook, Google, Google Apps, Twitter, Github, AOL, MyOpenID and many other OpenID providers" on CommunityGuides.
+Copyright (c) 2011 Markus Proske
+Copyright (c) 2011 Clifford Heath
+
+This article demonstrates how to set up a multi-provider authentication in Rails using the fabulous Omniauth gem. Users can add multiple providers to their account and views for sign-in, sign-up and management of linked accounts are provided. The full source code is available on Github as a basis for your own projects.
+
+This gem, sinatra_omniauth, provides a partial clone of the Omniauth_pure functionality, but as a Sinatra extension using DataMapper.
+
+== Using sinatra_omniauth
+
+To use sinatra_omniauth in your Sinatra application, you need to:
+* Add this gem to your Gemfile
+* Define your own User model so this gem won't use its own limited version
+* Decide whether to define your own Authorizations model likewise (you don't have to do this)
+* Configure all API keys in the settings of your Sinatra app (info below)
+* Ensure you have sessions enabled
+* Register Sinatra::Omniauth in your application.
 
 == Contributing to sinatra_omniauth
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
@@ -12,8 +32,13 @@ Description goes here.
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
+== Credits:
+
+Omniauth: http://github.com/intridea/omniauth
+Omniauth Buttons: http://github.com/intridea/authbuttons
+Omniauth pure and article: Markus Proske
+
 == Copyright
 
-Copyright (c) 2011 Clifford Heath. See LICENSE.txt for
-further details.
+Copyright (c) 2011 Clifford Heath. See LICENSE.txt for further details.
 
