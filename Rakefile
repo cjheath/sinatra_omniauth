@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "sinatra_omniauth"
   gem.homepage = "http://github.com/cjheath/sinatra_omniauth"
   gem.license = "MIT"
-  gem.summary = %Q{A Sinatra extenxion that provides pure OmniAuth goodness to your application (with DataMapper)}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A Sinatra extension that provides pure OmniAuth goodness to your application (with DataMapper)}
+  gem.description = %Q{This Sinatra extension, derived from omniauth_pure by Marcus Proske, adds OmniAuth authorization to your Sinatra application, so your users can login using FaceBook, Twitter and many other authorization providers, as long as you supply the API keys. It uses DataMapper and HAML.}
   gem.email = "clifford.heath@gmail.com"
   gem.authors = ["Clifford Heath"]
   # dependencies defined in Gemfile
