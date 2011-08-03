@@ -2,6 +2,8 @@
 
 A Sinatra extension that provides pure OmniAuth authentication to your application (with DataMapper)
 
+Not even nearly ready for production yet; don't waste your time.
+
 == Description
 
 Read Markus Proske's full article "Omniauth pure: Authentication with Facebook, Google, Google Apps, Twitter, Github, AOL, MyOpenID and many other OpenID providers" on CommunityGuides.

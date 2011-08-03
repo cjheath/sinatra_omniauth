@@ -184,7 +184,7 @@ module Sinatra
       end
 
       # authentication
-      app.delete /authentications/:id' do
+      app.delete '/authentications/:id' do
         # {:action=>"destroy", :controller=>"authentications"}
         authenticate_user!
 
@@ -192,7 +192,7 @@ module Sinatra
         @authentication = current_user.authentications.find(params[:id])
 
         if session[:authentication_id] == @authentication.id
-          flash[:error] = 'You can't delete this authorization because you are currently signed in with it!'
+          flash[:error] = 'You can\'t delete this authorization because you are currently signed in with it!'
         else
           @authentication.destroy
         end
@@ -212,12 +212,6 @@ module Sinatra
         # {:action=>"index", :controller=>"users"}
         authenticate_user!
         haml :users
-      end
-
-      # root
-      app.get '/' do
-        # {:action=>"index", :controller=>"users"}
-        haml :root
       end
 
     end
