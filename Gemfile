@@ -7,6 +7,7 @@ gem 'dm-migrations'
 #gem 'dm-sqlite-adapter'
 gem 'dm-postgres-adapter'
 gem 'sqlite3'
+gem 'rack-flash'
 
 group :development do
   gem "bundler", ">= 1.0.0"
