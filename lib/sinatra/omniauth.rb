@@ -31,6 +31,9 @@ module SinatraOmniAuth
       end
     end
 
+    # Make _method=delete work in POST requests:
+    app.enable :method_override
+
     # Create a flash, so we can display a message after a redirect
     app.use Rack::Flash, :accessorize => [:notice, :error]
     app.send(:define_method, :flash) do
@@ -177,11 +180,10 @@ module SinatraOmniAuth
 
     # authentication
     app.delete '/auth/:id' do
-      # {:action=>"destroy", :controller=>"authentications"}
       authenticate_user!
 
       # remove an authentication authentication linked to the current user
-      @authentication = current_user.authentications.find(params[:id])
+      @authentication = current_user.authentications.get(params[:id])
 
       if session[:authentication_id] == @authentication.id
         flash.error = 'You can\'t delete this authorization because you are currently signed in with it!'
@@ -189,7 +191,7 @@ module SinatraOmniAuth
         @authentication.destroy
       end
 
-      redirect to('/auth/')
+      redirect to('/auth')
     end
 
     # test_users
