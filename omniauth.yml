@@ -1,0 +1,71 @@
+# Using an array means we can control the order of display of the authentication methods:
+- 
+  provider: twitter
+  name: Twitter
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+
+- 
+  provider: facebook
+  # Facebook registration: https://www.facebook.com/developers/apps.php?app_id=216576775042338
+  name: Facebook
+  key: "--- enter your key here ---"
+  secret: --- enter your secret here ---
+  client_options:
+    ssl:
+      ca_file: /opt/local/etc/ssl/certs/ca-certificates.crt
+
+- 
+  provider: google
+  name: Google Apps
+  store: ./tmp
+  key: "--- enter your key here ---"
+  secret: --- enter your secret here ---
+
+- 
+  provider: linked_in
+  name: LinkedIn
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+  api_key: --- enter your API key here ---
+
+- 
+  # Github: https://github.com/account/applications/new
+  provider: github
+  name: GitHub
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+
+- 
+  provider: openid
+  # Generic OpenID:
+  name: OpenID
+  store: ./tmp
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+
+
+- 
+  provider: openid
+  name: MyOpenID
+  store: ./tmp
+  identifier: 'myopenid.com'
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+
+
+- 
+  provider: openid
+  name: Yahoo
+  identifier: 'yahoo.com'
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+
+
+- 
+  provider: openid
+  name: AOL
+  identifier: 'openid.aol.com'
+  key: --- enter your key here ---
+  secret: --- enter your secret here ---
+

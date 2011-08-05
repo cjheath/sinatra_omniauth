@@ -1,0 +1,62 @@
+!!!
+%html(lang="en-au")
+  %head
+    %meta(charset="utf-8")
+    = include_stylesheets :auth
+    = include_javascripts :jquery
+    %title APRIMO Sign In
+
+  %body
+    .authentications
+      - if current_user
+        %section.current
+          = current_auth.user_name+','
+          you are currently signed in using your
+          .authentication.current{:style=>"background-image: url(/images/authbuttons/#{@authentication_current.provider}_32.png)"}
+            .provider= @authentication_current.provider.titleize
+            .uid= @authentication_current.uid
+          account.
+        %section.logout
+          %a.signout{:href=>'/auth/signout'}Click here
+          to sign out.
+        %section.alternatives
+          - if @authentications_available.size > 1
+            .clear
+              You can switch to being signed in using one of your other accounts:
+          - @authentications_unused.each do |a|
+            .authentication.available{:style=>"background-image: url(/images/authbuttons/#{a.provider}_32.png)",:onclick=>"location = '/auth/#{a.provider}';"}
+              .provider= a.provider.titleize
+              .uid= a.uid
+              %a.remove{:href=>"/auth/#{a.id}", :method => :delete, :rel => 'nofollow', :'data-confirm' => 'Are you sure you want to remove this authentication option?'} x
+      %section.join
+        - if current_user
+          - if @authentications_possible.size > 0
+            .clear
+              You may add one of the following as an alternative way to log in:
+        - else
+          Sign in or join using any of your existing accounts:
+
+        - if @authentications_possible.size > 0
+          .clear
+            - @authentications_possible.each do |authentication|
+              .authentication{:style=>"background-image: url(/images/authbuttons/#{authentication['provider']}_32.png)",:onclick=>"location = '/auth/#{authentication['provider']}';"}
+                .provider= authentication['name']
+        - if !current_user
+          %p.clear
+            Don't have any of these accounts? Get your
+            %a{href='http://www.myopenid.com/'} MyOpenID
+            or
+            %a{href='http://mail.google.com/mail/signup'} GoogleID
+            now!
+            If you want to learn more about OpenID or find more OpenID providers,
+            you can get more information at
+            %a{href='http://myopenid.net/'} openid.net
+
+  %script{:type=>'text/javascript'}
+    $(document).ready(function() {
+    $('.remove').click(function() { if (confirm($(this).attr('data-confirm'))) {
+    var f = document.createElement('form');
+    f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;
+    var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method');
+    m.setAttribute('value', 'delete'); f.appendChild(m);f.submit();
+    };return false;});});

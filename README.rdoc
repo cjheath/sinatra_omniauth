@@ -1,8 +1,12 @@
 = sinatra_omniauth
 
-A Sinatra extension that provides pure OmniAuth authentication to your application (with DataMapper)
+Sinatra OmniAuth provides a Sinatra extension for adding pure OmniAuth authentication
+to your Sinatra application. "Pure" here means that you don't even need a username
+on the system, let alone a password; you just sign in using one of your existing
+social media accounts.
 
-Not even nearly ready for production yet; don't waste your time.
+SinatraOmniAuth uses DataMapper and Haml, though you can write your own templates too.
+SinatraOmniAuth uses the wonderful icon set from <https://github.com/intridea/authbuttons>
 
 == Description
 
@@ -12,17 +16,78 @@ Copyright (c) 2011 Clifford Heath
 
 This article demonstrates how to set up a multi-provider authentication in Rails using the fabulous Omniauth gem. Users can add multiple providers to their account and views for sign-in, sign-up and management of linked accounts are provided. The full source code is available on Github as a basis for your own projects.
 
-This gem, sinatra_omniauth, provides a partial clone of the Omniauth_pure functionality, but as a Sinatra extension using DataMapper.
+This gem, sinatra_omniauth, provides a partial clone of the Omniauth_pure functionality, but as a Sinatra extension using DataMapper and various other goodies.
 
 == Using sinatra_omniauth
 
-To use sinatra_omniauth in your Sinatra application, you need to:
-* Add this gem to your Gemfile
-* Define your own User model so this gem won't use its own limited version
-* Decide whether to define your own Authorizations model likewise (you don't have to do this)
-* Configure all API keys in the settings of your Sinatra app (info below)
-* Ensure you have sessions enabled
-* Register Sinatra::Omniauth in your application.
+In your Gemfile, add:
+
+    gem 'sinatra_omniauth'
+
+In the root directory of your app (same dir as config.ru), add your API keys to "omniauth.yml"
+
+In your application:
+
+    require 'sinatra/omniauth'
+
+    set :omniauth, YAML.load_file(File.dirname(__FILE__)+"/omniauth.yml")
+
+    register SinatraOmniAuth
+
+Models:
+    Copy user.rb and authentication.rb from the models directory, and add any
+    other fields and relationships you need.
+
+Routes which SinatraOmniAuth will handle (you may override these if needed):
+    /auth
+            presents a list of configured authentication services, including the
+            user's current sign-in account and any other registered accounts.
+            This page also includes a signout link and the ability to delete
+            secondary authentication methods.
+    /auth/signout
+            Signs the user out immediately and redirects to '/'
+    /auth/<provider>/callback
+            This URL is triggered when the authentication service redirects the user's
+            browser here, after a successful authentication. The handler signs in the
+            user, who may be a new user just joining, an existing user adding a new
+            authentication method, or an existing user signing in or changing to a
+            different authentication method
+    /auth/failure
+            Sets a flash saying that the authorization failed before redirecting to .
+    /auth/:id
+            A POST here with the magic _method=delete will delete this authentication
+            method from the current user's account
+
+Views:
+    Copy views/auth.haml and css/auth.css to wherever they will be found.
+
+    Note that auth.haml uses assets helpers include_javascripts and include_stylesheets
+    to load packed or unpacked JS (jQuery required) and CSS. Youy'll be wanting to
+    style it all up yourself anyhow, but when you're there, replace the helpers as needed.
+
+Images:
+    Use the authbuttons images as noted. auth.haml expects them to be in </images/authbuttons/>
+
+Helper methods:
+    authenticate_user!
+            Redirects to /auth if the user is not already signed in
+    current_user
+            The User record of the current signed-in user
+    current_auth
+            The Authentication record with which the user is signed in.
+            Note that for most authentication services, this includes the user's name
+            and email address.
+
+Make sure you add a handler for the following routes:
+    get '/auth/welcome'     - When a new user first joins
+    get '/auth/signedin'    - When the user signs in
+
+    These handlers may simply set a flash and redirect to another place.
+
+Oh, did I say flash? SinatraOmniAuth uses the "rack-flash" gem, so you can say:
+
+    flash.notice = "Welcome back!"; redirect to('/')
+    ... and also access flash.error, flash.notice, etc, in your views.
 
 == Contributing to sinatra_omniauth
 
@@ -37,10 +102,10 @@ To use sinatra_omniauth in your Sinatra application, you need to:
 == Credits:
 
 Omniauth: http://github.com/intridea/omniauth
-Omniauth Buttons: http://github.com/intridea/authbuttons
+authbuttons: http://github.com/intridea/authbuttons
 Omniauth pure and article: Markus Proske
 
 == Copyright
 
-Copyright (c) 2011 Clifford Heath. See LICENSE.txt for further details.
+Copyright (c) 2011 Clifford Heath. MIT Licensed. See LICENSE.txt for further details.
 

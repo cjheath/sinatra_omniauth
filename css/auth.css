@@ -1,0 +1,47 @@
+/* Authentication "badge" */
+.authentication {
+	position: relative;
+	display: inline-block;
+	padding: 0.1em 0.5em 0.1em 0.5em;
+	margin: 0.5em 0.3em;
+	Xpadding: 5px;
+        min-height: 40px;
+	background-color: #EEE;
+	border-radius: 0.5em; border: 2px black;
+	-webkit-box-shadow: 0 0 5px #000; -moz-box-shadow: 0 0 5px #000; box-shadow: 0 0 5px #000;
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.authentication.available {
+	padding-right: 1em;
+}
+.authentication.current {
+	padding-right: 0em;
+	cursor: default;
+}
+.authentication.available *,
+.authentication.current * {
+	margin: 3px 10px 3px 32px;
+}
+.authentication * {
+	margin: 12px 8px 12px 32px;
+}
+.authentication .provider {
+	font-weight: bold;
+}
+.authentication .remove {   /* The X to delete this authentication method */
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+/* Alternate auth providers */
+.auth_provider {
+	position: relative;
+	display: inline-block;
+	text-align: center;
+}
+.auth_provider * {
+	display:block;
+}
