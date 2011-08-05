@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Clifford Heath}]
-  s.date = %q{2011-08-03}
+  s.date = %q{2011-08-05}
   s.description = %q{This Sinatra extension, derived from omniauth_pure by Marcus Proske, adds OmniAuth authorization to your Sinatra application, so your users can login using FaceBook, Twitter and many other authorization providers, as long as you supply the API keys. It uses DataMapper and HAML.}
   s.email = %q{clifford.heath@gmail.com}
   s.extra_rdoc_files = [
@@ -19,14 +19,19 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     "Gemfile",
+    "Gemfile.lock",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "VERSION",
     "config.ru",
+    "css/auth.css",
     "lib/models/authorization.rb",
     "lib/models/user.rb",
     "lib/sinatra/omniauth.rb",
+    "models/authentication.rb",
+    "models/user.rb",
+    "omniauth.yml",
     "public/css/omniauth.css",
     "public/images/authbuttons/aol_128.png",
     "public/images/authbuttons/aol_256.png",
@@ -78,7 +83,8 @@ Gem::Specification.new do |s|
     "public/images/authbuttons/yahoo_64.png",
     "sinatra_omniauth.gemspec",
     "test/helper.rb",
-    "test/test_sinatra_omniauth.rb"
+    "test/test_sinatra_omniauth.rb",
+    "views/auth.haml"
   ]
   s.homepage = %q{http://github.com/cjheath/sinatra_omniauth}
   s.licenses = [%q{MIT}]
@@ -96,6 +102,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<dm-migrations>, [">= 0"])
       s.add_runtime_dependency(%q<dm-postgres-adapter>, [">= 0"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
+      s.add_runtime_dependency(%q<rack-flash>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.2"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
@@ -107,6 +114,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<dm-migrations>, [">= 0"])
       s.add_dependency(%q<dm-postgres-adapter>, [">= 0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
+      s.add_dependency(%q<rack-flash>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
       s.add_dependency(%q<rcov>, [">= 0"])
@@ -119,6 +127,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<dm-migrations>, [">= 0"])
     s.add_dependency(%q<dm-postgres-adapter>, [">= 0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
+    s.add_dependency(%q<rack-flash>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
     s.add_dependency(%q<rcov>, [">= 0"])
