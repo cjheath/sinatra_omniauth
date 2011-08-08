@@ -6,7 +6,7 @@ class Authentication
   property :id, Serial
   property :user_id, Integer
   property :provider, String
-  property :uid, String
-  property :user_name, String
-  property :user_email, String
+  property :uid, String, :length => 240
+  property :user_name, String, :length => 240
+  property :user_email, String, :length => 240
 end

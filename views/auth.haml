@@ -39,7 +39,7 @@
         - if @authentications_possible.size > 0
           .clear
             - @authentications_possible.each do |authentication|
-              .authentication{:style=>"background-image: url(/images/authbuttons/#{authentication['provider']}_32.png)",:onclick=>"location = '/auth/#{authentication['provider']}';"}
+              .authentication{:style=>"background-image: url(/images/authbuttons/#{authentication['provider']}_32.png)",:onclick=>"location = '/auth/#{(a = authentication['provider']) == 'openid' ? authentication['name'].downcase : a}';"}
                 .provider= authentication['name']
         - if !current_user
           %p.clear

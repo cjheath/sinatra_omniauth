@@ -11,9 +11,12 @@
   name: Facebook
   key: "--- enter your key here ---"
   secret: --- enter your secret here ---
-  client_options:
-    ssl:
-      ca_file: /opt/local/etc/ssl/certs/ca-certificates.crt
+  :client_options:
+    :ssl:
+      # For OS/X:
+      :ca_file: /opt/local/etc/ssl/certs/ca-certificates.crt
+      # For Linux:
+      # :ca_file: /etc/ssl/certs
 
 - 
   provider: google
@@ -35,24 +38,24 @@
   name: GitHub
   key: --- enter your key here ---
   secret: --- enter your secret here ---
+  :client_options:
+    :ssl:
+      # For OS/X:
+      :ca_file: /opt/local/etc/ssl/certs/ca-certificates.crt
+      # For Linux:
+      # :ca_file: /etc/ssl/certs
 
 - 
   provider: openid
   # Generic OpenID:
   name: OpenID
   store: ./tmp
-  key: --- enter your key here ---
-  secret: --- enter your secret here ---
-
 
 - 
   provider: openid
   name: MyOpenID
   store: ./tmp
   identifier: 'myopenid.com'
-  key: --- enter your key here ---
-  secret: --- enter your secret here ---
-
 
 - 
   provider: openid
@@ -60,7 +63,6 @@
   identifier: 'yahoo.com'
   key: --- enter your key here ---
   secret: --- enter your secret here ---
-
 
 - 
   provider: openid

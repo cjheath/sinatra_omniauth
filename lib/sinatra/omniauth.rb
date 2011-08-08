@@ -156,6 +156,14 @@ module SinatraOmniAuth
     end
 
     app.get '/auth/:authentication/callback' do
+      callback
+    end
+
+    app.post '/auth/:authentication/callback' do
+      callback
+    end
+
+    app.send(:define_method, :callback) do
       # callback: success
       # This handles signing in and adding an authentication authentication to existing accounts itself
 
@@ -173,7 +181,7 @@ module SinatraOmniAuth
 
       # create a new regularised authentication hash
       @authhash = Hash.new
-      oaeuh = omniauth['extra']['user_hash']
+      oaeuh = omniauth['extra'] && omniauth['extra']['user_hash']
       oaui = omniauth['user_info']
       if authentication_route == 'facebook'
         @authhash[:email] = oaeuh['email'] || ''
