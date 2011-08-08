@@ -148,7 +148,7 @@ module SinatraOmniAuth
           end
         @authentications_possible = @authentications_possible.dup.
           reject do |a|
-            @authentications_available.detect{|p| p.provider == a['provider'] }
+            @authentications_available.detect{|p| p.provider.gsub(/[ _]/,'') == a['name'].downcase.gsub(/[ _]/,'') }
           end
       end
 
