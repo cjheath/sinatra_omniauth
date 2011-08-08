@@ -198,6 +198,11 @@ module SinatraOmniAuth
         @authhash[:name] = oaui['name'] || ''
         @authhash[:uid] = (omniauth['uid'] || '').to_s
         @authhash[:provider] = omniauth['provider'] || ''
+      elsif authentication_route == 'aol'
+        @authhash[:email] = oaui['email'] || ''
+        @authhash[:name] = oaui['name'] || ''
+        @authhash[:uid] = (omniauth['uid'] || '').to_s
+        @authhash[:provider] = omniauth['provider'] || ''
       else
         # REVISIT: debug to output the hash that has been returned when adding new authentications
         return '<pre>'+omniauth.to_yaml+'</pre>'
