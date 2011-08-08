@@ -111,8 +111,10 @@ module SinatraOmniAuth
     app.use ::OmniAuth::Builder do
       app.settings.omniauth.each do |a|
         provider = a['provider']
+        client_options = a[:client_options]
+        client_options = client_options ? {:client_options => client_options} : {}
         if key = a['key']
-          provider provider, key, a['secret'], (a['client_options'] || {})
+          provider provider, key, a['secret'], client_options
         else
           name = a['name'].downcase.gsub(/ /,' ')
           store = OpenID::Store::Filesystem.new(a['store']||'./tmp')
