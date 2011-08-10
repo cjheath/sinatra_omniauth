@@ -23,6 +23,7 @@
 #
 #       require 'sinatra/omniauth'
 #
+#       enable :sessions
 #       set :omniauth, YAML.load_file(File.dirname(__FILE__)+"/omniauth.yml")
 #
 #       register SinatraOmniAuth
@@ -91,11 +92,26 @@ require 'rack-flash'
 module SinatraOmniAuth
   module Helpers
     def current_user
-      @current_user ||= User.get(session[:user_id]) if session[:user_id]
+      session.delete :authentication_id   # Clean up old auth values
+      begin
+        if session[:user_id] && session[:authentication_provider]
+          @current_auth ||= Authentication.first(:user_id => session[:user_id], :provider => session[:authentication_provider])
+          @current_user ||= @current_auth.user
+        end
+        return @current_user if @current_user
+      rescue      # Invalid cookie value formats?
+        @current_user = nil
+        @current_auth = nil
+      end
+
+      # Clean up any old/bad cookie values:
+      session.delete :user_id
+      session.delete :authentication_provider
     end
 
     def current_auth
-      @current_auth ||= Authentication.get(session[:authentication_id]) if session[:authentication_id]
+      current_user
+      @current_auth
     end
 
     def authenticate_user!
@@ -140,11 +156,11 @@ module SinatraOmniAuth
       @authentications_possible = settings.omniauth
 
       if current_user
-        @authentication_current = Authentication.get(session[:authentication_id])
+        @authentication_current = current_auth
         @authentications_available = current_user.authentications.all(:order => [ :provider.desc ])
         @authentications_unused = @authentications_available.
           reject do|a|
-            a.id == @authentication_current.id
+            a.provider == @authentication_current.provider
           end
         @authentications_possible = @authentications_possible.dup.
           reject do |a|
@@ -219,12 +235,12 @@ module SinatraOmniAuth
       if current_user
         if auth
           flash.notice = 'You are now signed in using your' + @authhash[:provider].capitalize + ' account'
-          session[:authentication_id] = auth.id     # They're now signed in using the new account
+          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
           redirect to('/auth/signedin')  # Already signed in, and we already had this authentication
         else
           auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
           flash.notice = 'Your ' + @authhash[:provider].capitalize + ' account has been added for signing in at this site.'
-          session[:authentication_id] = auth.id     # They're now signed in using the new account
+          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
           session[:user_name] = @authhash[:name] if @authhash[:name] != ''
           redirect to('/auth/signedin')
         end
@@ -233,7 +249,7 @@ module SinatraOmniAuth
           # Signin existing user
           # in the session his user id and the authentication id used for signing in is stored
           session[:user_id] = auth.user.id
-          session[:authentication_id] = auth.id
+          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
           session[:user_name] = @authhash[:name] if @authhash[:name] != ''
 
           flash.notice = 'Signed in successfully via ' + @authhash[:provider].capitalize + '.'
@@ -245,7 +261,7 @@ module SinatraOmniAuth
         session[:user_id] = @current_user.id
         session[:user_name] = @authhash[:name] if @authhash[:name] != ''
         auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
-        session[:authentication_id] = auth.id
+        session[:authentication_provider] = auth.provider
         redirect to('/auth/welcome')
       end
     end
@@ -258,12 +274,9 @@ module SinatraOmniAuth
     app.get '/auth/signout' do
       authenticate_user!
 
-      session[:user_id] = nil
-      session[:user_name] = nil
-      session[:authentication_id] = nil
       session.delete :user_id
       session.delete :user_name
-      session.delete :authentication_id
+      session.delete :authentication_provider
       flash.notice = 'You have been signed out'
       redirect to('/')
     end
@@ -275,7 +288,7 @@ module SinatraOmniAuth
       # remove an authentication authentication linked to the current user
       @authentication = current_user.authentications.get(params[:id])
 
-      if session[:authentication_id] == @authentication.id
+      if session[:authentication_provider] == @authentication.provider
         flash.error = 'You can\'t delete this authorization because you are currently signed in with it!'
       else
         @authentication.destroy

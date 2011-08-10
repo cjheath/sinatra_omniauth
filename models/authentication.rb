@@ -1,12 +1,15 @@
 class Authentication
   include DataMapper::Resource
 
-  belongs_to :user
+  belongs_to :user, :key => true
 
-  property :id, Serial
-  property :user_id, Integer
-  property :provider, String
+  # Authentication provider:
+  property :provider, String, :key => true
+
+  # User ID allocated by that provider:
   property :uid, String, :length => 240
+
+  # User name and email:
   property :user_name, String, :length => 240
-  property :user_email, String, :length => 240
+  property :user_email, String, :length => 240, :index => true
 end

@@ -61,13 +61,9 @@
   provider: openid
   name: Yahoo
   identifier: 'yahoo.com'
-  key: --- enter your key here ---
-  secret: --- enter your secret here ---
 
 - 
   provider: openid
   name: AOL
   identifier: 'openid.aol.com'
-  key: --- enter your key here ---
-  secret: --- enter your secret here ---
 

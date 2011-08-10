@@ -1,11 +1,9 @@
+require 'uuidtools'
+
 class User
   include DataMapper::Resource
 
-  devise :registerable,   # handles signing up users through a registration process, also edit/destroy account.
-         :rememberable,   # "Remember me" from a cookie
-         :trackable       # Tracks sign in count, timestamps and IP address
-
-  property :id, Serial
+  property :id, UUID, :key => true, :required => true, :default => proc { UUIDTools::UUID.random_create }
 
   # Each user may log in using different methods:
   has n, :authentications

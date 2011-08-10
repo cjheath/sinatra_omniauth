@@ -2,23 +2,29 @@
 %html(lang="en-au")
   %head
     %meta(charset="utf-8")
-    = include_stylesheets :auth
-    = include_javascripts :jquery
+    %link(rel="stylesheet" href="css/auth.css" media="screen" type="text/css")
+    %script(href="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript")
     %title APRIMO Sign In
 
   %body
+    - if flash.error || flash.notice
+      = flash.error || flash.notice
+
     .authentications
       - if current_user
         %section.current
-          = current_auth.user_name+','
-          you are currently signed in using your
+          You are currently signed in using as
+          = current_auth.user_name
+          using your
           .authentication.current{:style=>"background-image: url(/images/authbuttons/#{@authentication_current.provider}_32.png)"}
             .provider= @authentication_current.provider.titleize
             .uid= @authentication_current.uid
           account.
+
         %section.logout
           %a.signout{:href=>'/auth/signout'}Click here
           to sign out.
+
         %section.alternatives
           - if @authentications_available.size > 1
             .clear
@@ -28,6 +34,7 @@
               .provider= a.provider.titleize
               .uid= a.uid
               %a.remove{:href=>"/auth/#{a.id}", :method => :delete, :rel => 'nofollow', :'data-confirm' => 'Are you sure you want to remove this authentication option?'} x
+
       %section.join
         - if current_user
           - if @authentications_possible.size > 0
@@ -41,16 +48,17 @@
             - @authentications_possible.each do |authentication|
               .authentication{:style=>"background-image: url(/images/authbuttons/#{authentication['provider']}_32.png)",:onclick=>"location = '/auth/#{(a = authentication['provider']) == 'openid' ? authentication['name'].downcase : a}';"}
                 .provider= authentication['name']
-        - if !current_user
-          %p.clear
-            Don't have any of these accounts? Get your
-            %a{href='http://www.myopenid.com/'} MyOpenID
-            or
-            %a{href='http://mail.google.com/mail/signup'} GoogleID
-            now!
-            If you want to learn more about OpenID or find more OpenID providers,
-            you can get more information at
-            %a{href='http://myopenid.net/'} openid.net
+
+      - if !current_user
+        %p.clear
+          Don't have any of these accounts? Get your
+          %a(href='http://www.myopenid.com/') MyOpenID
+          or
+          %a(href='http://mail.google.com/mail/signup') GoogleID
+          now!
+          If you want to learn more about OpenID or find more OpenID providers,
+          you can get more information at
+          %a(href='http://myopenid.net/') openid.net
 
   %script{:type=>'text/javascript'}
     $(document).ready(function() {

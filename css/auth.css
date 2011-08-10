@@ -1,4 +1,7 @@
 /* Authentication "badge" */
+.authentications > * {
+  padding: 1em 1em;
+}
 .authentication {
 	position: relative;
 	display: inline-block;
