@@ -33,7 +33,7 @@
             .authentication.available{:style=>"background-image: url(/images/authbuttons/#{a.provider}_32.png)",:onclick=>"location = '/auth/#{a.provider}';"}
               .provider= a.provider.titleize
               .uid= a.uid
-              %a.remove{:href=>"/auth/#{a.id}", :method => :delete, :rel => 'nofollow', :'data-confirm' => 'Are you sure you want to remove this authentication option?'} x
+              %a.remove{:href=>"/auth/#{a.provider}", :method => :delete, :rel => 'nofollow', :'data-confirm' => 'Are you sure you want to remove this authentication option?'} x
 
       %section.join
         - if current_user

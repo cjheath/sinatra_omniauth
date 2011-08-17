@@ -155,8 +155,7 @@ module SinatraOmniAuth
     app.get '/auth' do
       @authentications_possible = settings.omniauth
 
-      if current_user
-        @authentication_current = current_auth
+      if current_user and @authentication_current = current_auth
         @authentications_available = current_user.authentications.all(:order => [ :provider.desc ])
         @authentications_unused = @authentications_available.
           reject do|a|
@@ -282,14 +281,17 @@ module SinatraOmniAuth
     end
 
     # authentication
-    app.delete '/auth/:id' do
+    app.delete '/auth/:provider' do
       authenticate_user!
 
       # remove an authentication authentication linked to the current user
-      @authentication = current_user.authentications.get(params[:id])
+      provider = params[:provider]
+      @authentication = current_user.authentications.first(:provider => provider)
 
-      if session[:authentication_provider] == @authentication.provider
-        flash.error = 'You can\'t delete this authorization because you are currently signed in with it!'
+      if !@authentication
+        pass
+      elsif session[:authentication_provider] == @authentication.provider
+        flash.error = 'You can\'t delete your authorization through #{provider.capitalize} because you are currently signed in with it!'
       else
         @authentication.destroy
       end
