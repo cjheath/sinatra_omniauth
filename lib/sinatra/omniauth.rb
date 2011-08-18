@@ -256,6 +256,23 @@ module SinatraOmniAuth
             redirect to('/auth/signedin')
           end
 
+          if email = @authhash[:email] and email != '' and
+            auth = Authentication.first(:email => email)
+            # Would have been seen as a new user, but instead we found that we know their email address already
+            provider = @authhash[:provider]
+            auth = auth.user.authentications.create!(
+                :provider => provider,
+                :uid => @authhash[:uid],
+                :user_name => @authhash[:name],
+                :user_email => @authhash[:email]
+              )
+            flash.notice = 'Your ' + provider.capitalize + ' account has been added for signing in at this site.'
+            session[:user_id] = auth.user.id
+            session[:authentication_provider] = auth.provider   # They're now signed in using the new account
+            session[:user_name] = @authhash[:name] if @authhash[:name] != ''
+            redirect to('/auth/signedin')
+          end
+
           # this is a new user; add them
           @current_user = User.create()
           session[:user_id] = @current_user.id
