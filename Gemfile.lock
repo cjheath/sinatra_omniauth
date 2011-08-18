@@ -1,7 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.2.6)
+    addressable (2.2.4)
     columnize (0.3.4)
     data_objects (0.10.6)
       addressable (~> 2.1)

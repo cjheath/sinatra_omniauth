@@ -123,181 +123,182 @@ module SinatraOmniAuth
   end
 
   def self.registered app
-    # Register OmniAuth Strategies and keys for all providers:
-    app.use ::OmniAuth::Builder do
-      app.settings.omniauth.each do |a|
-        provider = a['provider']
-        client_options = a[:client_options]
-        client_options = client_options ? {:client_options => client_options} : {}
-        if key = a['key']
-          provider provider, key, a['secret'], client_options
-        else
-          name = a['name'].downcase.gsub(/ /,' ')
-          store = OpenID::Store::Filesystem.new(a['store']||'./tmp')
-          provider provider, store, :name => name, :identifier => a['identifier']
+    app.class_eval do
+      # Register OmniAuth Strategies and keys for all providers:
+      use ::OmniAuth::Builder do
+        app.settings.omniauth.each do |a|
+          provider = a['provider']
+          client_options = a[:client_options]
+          client_options = client_options ? {:client_options => client_options} : {}
+          if key = a['key']
+            provider provider, key, a['secret'], client_options
+          else
+            name = a['name'].downcase.gsub(/ /,' ')
+            store = OpenID::Store::Filesystem.new(a['store']||'./tmp')
+            provider provider, store, :name => name, :identifier => a['identifier']
+          end
         end
       end
-    end
 
-    # Make _method=delete work in POST requests:
-    app.enable :method_override
+      # Make _method=delete work in POST requests:
+      enable :method_override
 
-    # Create a flash, so we can display a message after a redirect
-    app.use Rack::Flash, :accessorize => [:notice, :error]
-    app.send(:define_method, :flash) do
-      env['x-rack.flash']
-    end
+      # Create a flash, so we can display a message after a redirect
+      use Rack::Flash, :accessorize => [:notice, :error]
+      send(:define_method, :flash) do
+        env['x-rack.flash']
+      end
 
-    # A little help from our friends...
-    app.send(:include, Helpers)
+      # A little help from our friends...
+      include Helpers
 
-    # Display the authentication in use, registered for the current user, and available
-    app.get '/auth' do
-      @authentications_possible = settings.omniauth
+      # Display the authentication in use, registered for the current user, and available
+      get '/auth' do
+        @authentications_possible = settings.omniauth
 
-      if current_user and @authentication_current = current_auth
-        @authentications_available = current_user.authentications.all(:order => [ :provider.desc ])
-        @authentications_unused = @authentications_available.
-          reject do|a|
-            a.provider == @authentication_current.provider
+        if current_user and @authentication_current = current_auth
+          @authentications_available = current_user.authentications.all(:order => [ :provider.desc ])
+          @authentications_unused = @authentications_available.
+            reject do|a|
+              a.provider == @authentication_current.provider
+            end
+          @authentications_possible = @authentications_possible.dup.
+            reject do |a|
+              @authentications_available.detect{|p| p.provider.gsub(/[ _]/,'') == a['name'].downcase.gsub(/[ _]/,'') }
+            end
+        end
+
+        haml :auth
+      end
+
+      get '/auth/:authentication/callback' do
+        callback
+      end
+
+      post '/auth/:authentication/callback' do
+        callback
+      end
+
+      send(:define_method, :callback) do
+        # callback: success
+        # This handles signing in and adding an authentication authentication to existing accounts itself
+
+        # get the authentication parameter from the Rails router
+        authentication_route = params[:authentication] ? params[:authentication] : 'No authentication recognized (invalid callback)'
+
+        # get the full hash from omniauth
+        omniauth = request.env['omniauth.auth']
+
+        # continue only if hash and parameter exist
+        unless omniauth and params[:authentication]
+          flash.error = 'Error while authenticating via ' + authentication_route.capitalize + '. The authentication did not return valid data.'
+          redirect to('/signin')
+        end
+
+        # create a new regularised authentication hash
+        @authhash = Hash.new
+        oaeuh = omniauth['extra'] && omniauth['extra']['user_hash']
+        oaui = omniauth['user_info']
+        if authentication_route == 'facebook'
+          @authhash[:email] = oaeuh['email'] || ''
+          @authhash[:name] = oaeuh['name'] || ''
+          @authhash[:uid] = oaeuh['name'] || ''
+          @authhash[:provider] = omniauth['provider'] || ''
+        elsif authentication_route == 'github'
+          @authhash[:email] = oaui['email'] || ''
+          @authhash[:name] = oaui['name'] || ''
+          @authhash[:uid] = (oaeuh['id'] || '').to_s
+          @authhash[:provider] = omniauth['provider'] || ''
+        elsif ['google', 'yahoo', 'linked_in', 'twitter', 'myopenid', 'openid', 'open_id'].index(authentication_route) != nil
+          @authhash[:email] = oaui['email'] || ''
+          @authhash[:name] = oaui['name'] || ''
+          @authhash[:uid] = (omniauth['uid'] || '').to_s
+          @authhash[:provider] = omniauth['provider'] || ''
+        elsif authentication_route == 'aol'
+          @authhash[:email] = oaui['email'] || ''
+          @authhash[:name] = oaui['name'] || ''
+          @authhash[:uid] = (omniauth['uid'] || '').to_s
+          @authhash[:provider] = omniauth['provider'] || ''
+        else
+          # REVISIT: debug to output the hash that has been returned when adding new authentications
+          return '<pre>'+omniauth.to_yaml+'</pre>'
+        end
+
+        if @authhash[:uid] == '' or @authhash[:provider] == ''
+          flash.error = 'Error while authenticating via ' + authentication_route + '/' + @authhash[:provider].capitalize + '. The authentication returned invalid data for the user id.'
+          redirect to('/auth')
+        end
+
+        auth = Authentication.first(:provider => @authhash[:provider], :uid => @authhash[:uid])
+
+        # if the user is currently signed in, he/she might want to add another account to signin
+        if current_user
+          if auth
+            flash.notice = 'You are now signed in using your' + @authhash[:provider].capitalize + ' account'
+            session[:authentication_provider] = auth.provider   # They're now signed in using the new account
+            redirect to('/auth/signedin')  # Already signed in, and we already had this authentication
+          else
+            auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
+            flash.notice = 'Your ' + @authhash[:provider].capitalize + ' account has been added for signing in at this site.'
+            session[:authentication_provider] = auth.provider   # They're now signed in using the new account
+            session[:user_name] = @authhash[:name] if @authhash[:name] != ''
+            redirect to('/auth/signedin')
           end
-        @authentications_possible = @authentications_possible.dup.
-          reject do |a|
-            @authentications_available.detect{|p| p.provider.gsub(/[ _]/,'') == a['name'].downcase.gsub(/[ _]/,'') }
+        else
+          if auth
+            # Signin existing user
+            # in the session his user id and the authentication id used for signing in is stored
+            session[:user_id] = auth.user.id
+            session[:authentication_provider] = auth.provider   # They're now signed in using the new account
+            session[:user_name] = @authhash[:name] if @authhash[:name] != ''
+
+            flash.notice = 'Signed in successfully via ' + @authhash[:provider].capitalize + '.'
+            redirect to('/auth/signedin')
           end
+
+          # this is a new user; add them
+          @current_user = User.create()
+          session[:user_id] = @current_user.id
+          session[:user_name] = @authhash[:name] if @authhash[:name] != ''
+          auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
+          session[:authentication_provider] = auth.provider
+          redirect to('/auth/welcome')
+        end
       end
 
-      haml :auth
-    end
-
-    app.get '/auth/:authentication/callback' do
-      callback
-    end
-
-    app.post '/auth/:authentication/callback' do
-      callback
-    end
-
-    app.send(:define_method, :callback) do
-      # callback: success
-      # This handles signing in and adding an authentication authentication to existing accounts itself
-
-      # get the authentication parameter from the Rails router
-      authentication_route = params[:authentication] ? params[:authentication] : 'No authentication recognized (invalid callback)'
-
-      # get the full hash from omniauth
-      omniauth = request.env['omniauth.auth']
-
-      # continue only if hash and parameter exist
-      unless omniauth and params[:authentication]
-        flash.error = 'Error while authenticating via ' + authentication_route.capitalize + '. The authentication did not return valid data.'
-        redirect to('/signin')
+      get '/auth/failure' do
+        flash.error = 'There was an error at the remote authentication authentication. You have not been signed in.'
+        redirect to('/')
       end
 
-      # create a new regularised authentication hash
-      @authhash = Hash.new
-      oaeuh = omniauth['extra'] && omniauth['extra']['user_hash']
-      oaui = omniauth['user_info']
-      if authentication_route == 'facebook'
-        @authhash[:email] = oaeuh['email'] || ''
-        @authhash[:name] = oaeuh['name'] || ''
-        @authhash[:uid] = oaeuh['name'] || ''
-        @authhash[:provider] = omniauth['provider'] || ''
-      elsif authentication_route == 'github'
-        @authhash[:email] = oaui['email'] || ''
-        @authhash[:name] = oaui['name'] || ''
-        @authhash[:uid] = (oaeuh['id'] || '').to_s
-        @authhash[:provider] = omniauth['provider'] || ''
-      elsif ['google', 'yahoo', 'linked_in', 'twitter', 'myopenid', 'openid', 'open_id'].index(authentication_route) != nil
-        @authhash[:email] = oaui['email'] || ''
-        @authhash[:name] = oaui['name'] || ''
-        @authhash[:uid] = (omniauth['uid'] || '').to_s
-        @authhash[:provider] = omniauth['provider'] || ''
-      elsif authentication_route == 'aol'
-        @authhash[:email] = oaui['email'] || ''
-        @authhash[:name] = oaui['name'] || ''
-        @authhash[:uid] = (omniauth['uid'] || '').to_s
-        @authhash[:provider] = omniauth['provider'] || ''
-      else
-        # REVISIT: debug to output the hash that has been returned when adding new authentications
-        return '<pre>'+omniauth.to_yaml+'</pre>'
+      get '/auth/signout' do
+        authenticate_user!
+
+        session.delete :user_id
+        session.delete :user_name
+        session.delete :authentication_provider
+        flash.notice = 'You have been signed out'
+        redirect to('/')
       end
 
-      if @authhash[:uid] == '' or @authhash[:provider] == ''
-        flash.error = 'Error while authenticating via ' + authentication_route + '/' + @authhash[:provider].capitalize + '. The authentication returned invalid data for the user id.'
+      # authentication
+      delete '/auth/:provider' do
+        authenticate_user!
+
+        # remove an authentication authentication linked to the current user
+        provider = params[:provider]
+        @authentication = current_user.authentications.first(:provider => provider)
+
+        if !@authentication
+          pass
+        elsif session[:authentication_provider] == @authentication.provider
+          flash.error = 'You can\'t delete your authorization through #{provider.capitalize} because you are currently signed in with it!'
+        else
+          @authentication.destroy
+        end
+
         redirect to('/auth')
       end
-
-      auth = Authentication.first(:provider => @authhash[:provider], :uid => @authhash[:uid])
-
-      # if the user is currently signed in, he/she might want to add another account to signin
-      if current_user
-        if auth
-          flash.notice = 'You are now signed in using your' + @authhash[:provider].capitalize + ' account'
-          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
-          redirect to('/auth/signedin')  # Already signed in, and we already had this authentication
-        else
-          auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
-          flash.notice = 'Your ' + @authhash[:provider].capitalize + ' account has been added for signing in at this site.'
-          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
-          session[:user_name] = @authhash[:name] if @authhash[:name] != ''
-          redirect to('/auth/signedin')
-        end
-      else
-        if auth
-          # Signin existing user
-          # in the session his user id and the authentication id used for signing in is stored
-          session[:user_id] = auth.user.id
-          session[:authentication_provider] = auth.provider   # They're now signed in using the new account
-          session[:user_name] = @authhash[:name] if @authhash[:name] != ''
-
-          flash.notice = 'Signed in successfully via ' + @authhash[:provider].capitalize + '.'
-          redirect to('/auth/signedin')
-        end
-
-        # this is a new user; add them
-        @current_user = User.create()
-        session[:user_id] = @current_user.id
-        session[:user_name] = @authhash[:name] if @authhash[:name] != ''
-        auth = current_user.authentications.create!(:provider => @authhash[:provider], :uid => @authhash[:uid], :user_name => @authhash[:name], :user_email => @authhash[:email])
-        session[:authentication_provider] = auth.provider
-        redirect to('/auth/welcome')
-      end
     end
-
-    app.get '/auth/failure' do
-      flash.error = 'There was an error at the remote authentication authentication. You have not been signed in.'
-      redirect to('/')
-    end
-
-    app.get '/auth/signout' do
-      authenticate_user!
-
-      session.delete :user_id
-      session.delete :user_name
-      session.delete :authentication_provider
-      flash.notice = 'You have been signed out'
-      redirect to('/')
-    end
-
-    # authentication
-    app.delete '/auth/:provider' do
-      authenticate_user!
-
-      # remove an authentication authentication linked to the current user
-      provider = params[:provider]
-      @authentication = current_user.authentications.first(:provider => provider)
-
-      if !@authentication
-        pass
-      elsif session[:authentication_provider] == @authentication.provider
-        flash.error = 'You can\'t delete your authorization through #{provider.capitalize} because you are currently signed in with it!'
-      else
-        @authentication.destroy
-      end
-
-      redirect to('/auth')
-    end
-
   end
 end
