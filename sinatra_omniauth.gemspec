@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{sinatra_omniauth}
-  s.version = "1.1.0"
+  s.name = "sinatra_omniauth"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Clifford Heath}]
-  s.date = %q{2011-08-18}
-  s.description = %q{This Sinatra extension, derived from omniauth_pure by Marcus Proske, adds OmniAuth authorization to your Sinatra application, so your users can login using FaceBook, Twitter and many other authorization providers, as long as you supply the API keys. It uses DataMapper and HAML.}
-  s.email = %q{clifford.heath@gmail.com}
+  s.authors = ["Clifford Heath"]
+  s.date = "2012-09-09"
+  s.description = "This Sinatra extension, derived from omniauth_pure by Marcus Proske, adds OmniAuth authorization to your Sinatra application, so your users can login using FaceBook, Twitter and many other authorization providers, as long as you supply the API keys. It uses DataMapper and HAML."
+  s.email = "clifford.heath@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -83,64 +83,73 @@ Gem::Specification.new do |s|
     "test/test_sinatra_omniauth.rb",
     "views/auth.haml"
   ]
-  s.homepage = %q{http://github.com/cjheath/sinatra_omniauth}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.5}
-  s.summary = %q{A Sinatra extension that provides pure OmniAuth goodness to your application (with DataMapper)}
+  s.homepage = "http://github.com/cjheath/sinatra_omniauth"
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.24"
+  s.summary = "A Sinatra extension that provides pure OmniAuth goodness to your application (with DataMapper)"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<sinatra>, [">= 0"])
-      s.add_runtime_dependency(%q<omniauth>, ["~> 0.2.2"])
+      s.add_runtime_dependency(%q<omniauth>, [">= 0"])
+      s.add_runtime_dependency(%q<omniauth-twitter>, [">= 0"])
       s.add_runtime_dependency(%q<dm-core>, [">= 0"])
+      s.add_runtime_dependency(%q<addressable>, [">= 0"])
       s.add_runtime_dependency(%q<dm-migrations>, [">= 0"])
       s.add_runtime_dependency(%q<dm-postgres-adapter>, [">= 0"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
-      s.add_runtime_dependency(%q<rack-flash>, [">= 0"])
+      s.add_runtime_dependency(%q<rack-flash3>, [">= 0"])
       s.add_runtime_dependency(%q<uuidtools>, [">= 0"])
       s.add_runtime_dependency(%q<haml>, [">= 3.1.1"])
       s.add_development_dependency(%q<bundler>, [">= 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.2"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<rcov>, ["~> 0.9.11"])
+      s.add_development_dependency(%q<simplecov>, ["~> 0.6.4"])
       s.add_development_dependency(%q<rdoc>, [">= 2.4.0"])
-      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
       s.add_development_dependency(%q<dm-sqlite-adapter>, [">= 0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.6.0"])
     else
       s.add_dependency(%q<sinatra>, [">= 0"])
-      s.add_dependency(%q<omniauth>, ["~> 0.2.2"])
+      s.add_dependency(%q<omniauth>, [">= 0"])
+      s.add_dependency(%q<omniauth-twitter>, [">= 0"])
       s.add_dependency(%q<dm-core>, [">= 0"])
+      s.add_dependency(%q<addressable>, [">= 0"])
       s.add_dependency(%q<dm-migrations>, [">= 0"])
       s.add_dependency(%q<dm-postgres-adapter>, [">= 0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
-      s.add_dependency(%q<rack-flash>, [">= 0"])
+      s.add_dependency(%q<rack-flash3>, [">= 0"])
       s.add_dependency(%q<uuidtools>, [">= 0"])
       s.add_dependency(%q<haml>, [">= 3.1.1"])
       s.add_dependency(%q<bundler>, [">= 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<rcov>, ["~> 0.9.11"])
+      s.add_dependency(%q<simplecov>, ["~> 0.6.4"])
       s.add_dependency(%q<rdoc>, [">= 2.4.0"])
-      s.add_dependency(%q<ruby-debug>, [">= 0"])
       s.add_dependency(%q<dm-sqlite-adapter>, [">= 0"])
+      s.add_dependency(%q<rspec>, ["~> 2.6.0"])
     end
   else
     s.add_dependency(%q<sinatra>, [">= 0"])
-    s.add_dependency(%q<omniauth>, ["~> 0.2.2"])
+    s.add_dependency(%q<omniauth>, [">= 0"])
+    s.add_dependency(%q<omniauth-twitter>, [">= 0"])
     s.add_dependency(%q<dm-core>, [">= 0"])
+    s.add_dependency(%q<addressable>, [">= 0"])
     s.add_dependency(%q<dm-migrations>, [">= 0"])
     s.add_dependency(%q<dm-postgres-adapter>, [">= 0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
-    s.add_dependency(%q<rack-flash>, [">= 0"])
+    s.add_dependency(%q<rack-flash3>, [">= 0"])
     s.add_dependency(%q<uuidtools>, [">= 0"])
     s.add_dependency(%q<haml>, [">= 3.1.1"])
     s.add_dependency(%q<bundler>, [">= 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.2"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<rcov>, ["~> 0.9.11"])
+    s.add_dependency(%q<simplecov>, ["~> 0.6.4"])
     s.add_dependency(%q<rdoc>, [">= 2.4.0"])
-    s.add_dependency(%q<ruby-debug>, [">= 0"])
     s.add_dependency(%q<dm-sqlite-adapter>, [">= 0"])
+    s.add_dependency(%q<rspec>, ["~> 2.6.0"])
   end
 end
 
