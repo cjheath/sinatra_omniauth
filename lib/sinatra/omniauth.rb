@@ -127,6 +127,8 @@ module SinatraOmniAuth
       # Register OmniAuth Strategies and keys for all providers:
       use ::OmniAuth::Builder do
         app.settings.omniauth.each do |a|
+          requires = a['require']
+          require requires if requires
           provider = a['provider']
           client_options = a[:client_options]
           client_options = client_options ? {:client_options => client_options} : {}
@@ -135,7 +137,7 @@ module SinatraOmniAuth
           else
             name = a['name'].downcase.gsub(/ /,' ')
             store = OpenID::Store::Filesystem.new(a['store']||'./tmp')
-            provider provider, store, :name => name, :identifier => a['identifier']
+            provider provider, :store => store, :name => name, :identifier => a['identifier']
           end
         end
       end

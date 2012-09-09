@@ -32,13 +32,27 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-  test.rcov_opts << '--exclude "gems/*"'
+require 'rspec/core'
+require 'rspec/core/rake_task'
+require 'rdoc/task'
+
+desc "Run RSpec tests and produce coverage files (results viewable in coverage/index.html)"
+RSpec::Core::RakeTask.new(:coverage) do |spec|
+  if RUBY_VERSION < '1.9'
+    spec.rcov_opts = [
+        '--exclude', 'spec',
+        '--exclude', 'lib/activefacts/tracer.rb',
+        '--exclude', 'gem/*'
+      ]
+    spec.rcov = true
+  else
+    spec.rspec_opts = ['--require', 'simplecov_helper']
+  end
 end
+
+task :cov => :coverage
+task :rcov => :coverage
+task :simplecov => :coverage
 
 task :default => :test
 
