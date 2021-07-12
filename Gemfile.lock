@@ -50,7 +50,7 @@ GEM
       rack
     rack-protection (2.0.5)
       rack
-    rake (12.3.2)
+    rake (13.0.1)
     rcov (0.9.11)
     rdoc (6.1.1)
     rspec (2.6.0)
