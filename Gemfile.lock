@@ -1,8 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.6.0)
-      public_suffix (>= 2.0.2, < 4.0)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     data_objects (0.10.17)
       addressable (~> 2.1)
     diff-lcs (1.1.3)
@@ -23,36 +23,35 @@ GEM
       data_objects (= 0.10.17)
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
-    git (1.5.0)
-    haml (5.1.1)
+    haml (5.2.2)
       temple (>= 0.8.0)
       tilt
-    hashie (3.6.0)
-    jeweler (1.6.4)
-      bundler (~> 1.0)
-      git (>= 1.2.5)
-      rake
-    multi_json (1.13.1)
-    mustermann (1.0.3)
-    oauth (0.5.4)
-    omniauth (1.9.0)
-      hashie (>= 3.4.6, < 3.7.0)
-      rack (>= 1.6.2, < 3)
-    omniauth-oauth (1.1.0)
+    hashie (5.0.0)
+    multi_json (1.15.0)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
+    oauth (0.5.8)
+    omniauth (2.1.0)
+      hashie (>= 3.4.6)
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-oauth (1.2.0)
       oauth
-      omniauth (~> 1.0)
+      omniauth (>= 1.0, < 3)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    public_suffix (3.1.0)
-    rack (2.0.7)
+    psych (4.0.3)
+      stringio
+    public_suffix (4.0.7)
+    rack (2.2.3)
     rack-flash3 (1.0.5)
       rack
-    rack-protection (2.0.5)
+    rack-protection (2.2.0)
       rack
-    rake (12.3.2)
     rcov (0.9.11)
-    rdoc (6.1.1)
+    rdoc (6.4.0)
+      psych (>= 4.0.0)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -61,32 +60,33 @@ GEM
     rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
+    ruby2_keywords (0.0.5)
     simplecov (0.6.4)
       multi_json (~> 1.0)
       simplecov-html (~> 0.5.3)
     simplecov-html (0.5.3)
-    sinatra (2.0.5)
+    sinatra (2.2.0)
       mustermann (~> 1.0)
-      rack (~> 2.0)
-      rack-protection (= 2.0.5)
+      rack (~> 2.2)
+      rack-protection (= 2.2.0)
       tilt (~> 2.0)
-    sqlite3 (1.4.1)
-    temple (0.8.1)
-    tilt (2.0.9)
-    uuidtools (2.1.5)
+    sqlite3 (1.4.2)
+    stringio (3.0.1)
+    temple (0.8.2)
+    tilt (2.0.10)
+    uuidtools (2.2.0)
 
 PLATFORMS
   ruby
+  x86_64-darwin-18
 
 DEPENDENCIES
   addressable
-  bundler (>= 1.0.0)
   dm-core
   dm-migrations
   dm-postgres-adapter
   dm-sqlite-adapter
   haml (>= 3.1.1)
-  jeweler (~> 1.6.2)
   omniauth
   omniauth-twitter
   rack-flash3
@@ -99,4 +99,4 @@ DEPENDENCIES
   uuidtools
 
 BUNDLED WITH
-   1.16.2
+   2.2.0
