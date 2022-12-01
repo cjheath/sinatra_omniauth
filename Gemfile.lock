@@ -28,7 +28,7 @@ GEM
       tilt
     hashie (5.0.0)
     multi_json (1.15.0)
-    mustermann (1.1.1)
+    mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     oauth (0.5.8)
     omniauth (2.1.0)
@@ -44,10 +44,10 @@ GEM
     psych (4.0.3)
       stringio
     public_suffix (4.0.7)
-    rack (2.2.3.1)
+    rack (2.2.4)
     rack-flash3 (1.0.5)
       rack
-    rack-protection (2.2.0)
+    rack-protection (2.2.3)
       rack
     rcov (0.9.11)
     rdoc (6.4.0)
@@ -65,15 +65,15 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.5.3)
     simplecov-html (0.5.3)
-    sinatra (2.2.0)
-      mustermann (~> 1.0)
+    sinatra (2.2.3)
+      mustermann (~> 2.0)
       rack (~> 2.2)
-      rack-protection (= 2.2.0)
+      rack-protection (= 2.2.3)
       tilt (~> 2.0)
     sqlite3 (1.4.2)
     stringio (3.0.1)
     temple (0.8.2)
-    tilt (2.0.10)
+    tilt (2.0.11)
     uuidtools (2.2.0)
 
 PLATFORMS
