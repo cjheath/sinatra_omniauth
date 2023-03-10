@@ -18,5 +18,5 @@ group :development do
   gem 'simplecov', '~>0.6.4', :platforms => :mri_19, :require => false
   gem 'rdoc', '>= 2.4.0'
   gem 'dm-sqlite-adapter'
-  gem 'rspec', '~>2.6.0'
+  gem 'rspec', '~>3'
 end
