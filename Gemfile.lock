@@ -50,7 +50,7 @@ GEM
     psych (5.1.0)
       stringio
     public_suffix (5.0.1)
-    rack (2.2.6.3)
+    rack (2.2.6.4)
     rack-flash3 (1.0.5)
       rack
     rack-protection (3.0.5)
@@ -85,6 +85,7 @@ GEM
       hashie
       version_gem (~> 1.1, >= 1.1.1)
     sqlite3 (1.6.1-x86_64-darwin)
+    sqlite3 (1.6.1-x86_64-linux)
     stringio (3.0.5)
     temple (0.10.0)
     thor (1.2.1)
@@ -94,6 +95,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-18
+  x86_64-linux
 
 DEPENDENCIES
   addressable
