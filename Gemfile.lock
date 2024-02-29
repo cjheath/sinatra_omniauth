@@ -50,7 +50,7 @@ GEM
     psych (5.1.0)
       stringio
     public_suffix (5.0.1)
-    rack (2.2.6.4)
+    rack (2.2.8.1)
     rack-flash3 (1.0.5)
       rack
     rack-protection (3.0.5)
