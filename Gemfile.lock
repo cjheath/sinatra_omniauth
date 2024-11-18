@@ -3,6 +3,7 @@ GEM
   specs:
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    base64 (0.2.0)
     data_objects (0.10.17)
       addressable (~> 2.1)
     diff-lcs (1.5.0)
@@ -28,8 +29,9 @@ GEM
       thor
       tilt
     hashie (5.0.0)
+    logger (1.6.1)
     multi_json (1.15.0)
-    mustermann (3.0.0)
+    mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -50,11 +52,15 @@ GEM
     psych (5.1.2)
       stringio
     public_suffix (5.0.1)
-    rack (2.2.9)
+    rack (3.1.8)
     rack-flash3 (1.0.5)
       rack
-    rack-protection (3.0.5)
-      rack
+    rack-protection (4.1.0)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.0.0)
+      rack (>= 3.0.0)
     rcov (0.9.11)
     rdoc (6.5.1.1)
       psych (>= 4.0.0)
@@ -76,10 +82,12 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.5.3)
     simplecov-html (0.5.3)
-    sinatra (3.0.5)
+    sinatra (4.1.0)
+      logger (>= 1.6.0)
       mustermann (~> 3.0)
-      rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.0.5)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.1.0)
+      rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
     snaky_hash (2.0.1)
       hashie
@@ -89,7 +97,7 @@ GEM
     stringio (3.1.0)
     temple (0.10.0)
     thor (1.2.1)
-    tilt (2.1.0)
+    tilt (2.4.0)
     uuidtools (2.2.0)
     version_gem (1.1.1)
 
