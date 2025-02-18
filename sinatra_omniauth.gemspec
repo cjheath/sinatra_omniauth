@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "sinatra_omniauth"
-  spec.version = "1.3.0"
+  spec.version = "1.3.1"
   spec.authors = ["Clifford Heath"]
   spec.email = "clifford.heath@gmail.com"
 
@@ -86,7 +86,7 @@ Gem::Specification.new do |spec|
     "views/auth.haml"
   ]
 
-  spec.add_runtime_dependency(%q<sinatra>, [">= 0"])
+  spec.add_runtime_dependency(%q<sinatra>, ["~> 4.1.0"])
   spec.add_runtime_dependency(%q<omniauth>, [">= 0"])
   spec.add_runtime_dependency(%q<omniauth-twitter>, [">= 0"])
   spec.add_runtime_dependency(%q<dm-core>, [">= 0"])
