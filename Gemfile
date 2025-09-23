@@ -12,6 +12,7 @@ gem 'sqlite3'
 gem 'rack-flash3'
 gem 'uuidtools'
 gem 'haml', '>=3.1.1'
+gem 'rack', '>=3.1.16'
 
 group :development do
   gem 'rcov', '~>0.9.11', :platforms => [:jruby, :mri_18], :require => false
