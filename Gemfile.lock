@@ -56,7 +56,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    rack (3.2.1)
+    rack (3.2.3)
     rack-flash3 (1.0.5)
       rack
     rack-protection (4.2.0)
