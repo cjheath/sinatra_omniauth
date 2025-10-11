@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = "sinatra_omniauth"
-  spec.version = "1.3.2"
+  spec.version = "1.3.3"
   spec.authors = ["Clifford Heath"]
   spec.email = "clifford.heath@gmail.com"
 
