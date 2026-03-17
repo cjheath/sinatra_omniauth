@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |spec|
   spec.name = "sinatra_omniauth"
-  spec.version = "1.3.3"
+  spec.version = "1.3.4"
   spec.authors = ["Clifford Heath"]
   spec.email = "clifford.heath@gmail.com"
 
-  spec.date = "2023-03-11"
+  spec.date = "2026-03-17"
   spec.summary = "A Sinatra extension that provides pure OmniAuth goodness to your application (with DataMapper)"
   spec.description = "This Sinatra extension, derived from omniauth_pure by Marcus Proske, adds OmniAuth authorization to your Sinatra application, so your users can login using FaceBook, Twitter and many other authorization providers, as long as you supply the API keys. It uses DataMapper and HAML."
   spec.homepage = "http://github.com/cjheath/sinatra_omniauth"
