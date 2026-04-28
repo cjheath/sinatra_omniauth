@@ -25,7 +25,7 @@ GEM
       data_objects (= 0.10.17)
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
-    erb (6.0.2)
+    erb (6.0.4)
     haml (7.2.0)
       temple (>= 0.8.2)
       thor
@@ -164,7 +164,7 @@ CHECKSUMS
   dm-sqlite-adapter (1.2.0) sha256=0c96433c662ac5505e396858a1f5afc26ca713ce0224e4f52867714978ee0957
   do_postgres (0.10.17) sha256=a8e6b28f7d65dc9d07cd62fb7ca404d5b8e1ce309922e18a6d9b16b0d366bd8a
   do_sqlite3 (0.10.17) sha256=8ebdac3d05c2711b7a8215937cbb5f5c97082a12515d3cab50e6f1273129bf3f
-  erb (6.0.2) sha256=9fe6264d44f79422c87490a1558479bd0e7dad4dd0e317656e67ea3077b5242b
+  erb (6.0.4) sha256=38e3803694be357fe2bfe312487c74beaf9fb4e5beb3e22498952fe1645b95d9
   haml (7.2.0) sha256=87fd2b71f7feab1724337b090a7d767f5ab2d42f08c974f3ead673f18cfcd55a
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
